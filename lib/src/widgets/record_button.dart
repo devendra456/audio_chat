@@ -75,9 +75,9 @@ class _RecordButtonState extends State<RecordButton>
   void didChangeDependencies() {
     super.didChangeDependencies();
     timerWidth =
-        MediaQuery.of(context).size.width - 2 * 10 - 4;
+        MediaQuery.of(context).size.width - 2 * 6 - 4;
     timerAnimation =
-        Tween<double>(begin: timerWidth + 10, end: 0)
+        Tween<double>(begin: timerWidth + 6, end: 0)
             .animate(
       CurvedAnimation(
         parent: controller,
@@ -85,7 +85,7 @@ class _RecordButtonState extends State<RecordButton>
       ),
     );
     lockerAnimation =
-        Tween<double>(begin: lockerHeight + 10, end: 0)
+        Tween<double>(begin: lockerHeight + 6, end: 0)
             .animate(
       CurvedAnimation(
         parent: controller,
@@ -124,10 +124,7 @@ class _RecordButtonState extends State<RecordButton>
         child: Container(
           height: lockerHeight,
           width: size,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            // color: Colors.black,
-          ),
+          decoration: const ShapeDecoration(shape: StadiumBorder(),color: Colors.white),
           padding: const EdgeInsets.symmetric(vertical: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -160,12 +157,9 @@ class _RecordButtonState extends State<RecordButton>
         child: Container(
           height: size,
           width: timerWidth,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            // color: Colors.black,
-          ),
+          decoration: const ShapeDecoration(shape: StadiumBorder(),color: Colors.white),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
@@ -197,10 +191,7 @@ class _RecordButtonState extends State<RecordButton>
       child: Container(
         height: size,
         width: timerWidth,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          // color: Colors.black,
-        ),
+        decoration: const ShapeDecoration(shape: StadiumBorder(),color: Colors.white),
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 25),
           child: GestureDetector(

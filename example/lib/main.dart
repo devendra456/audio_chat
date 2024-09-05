@@ -24,7 +24,6 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(title: const Text("Audio Chat"),),
         body: Column(
           children: [
-            Expanded(child: 
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.all(8),
@@ -32,7 +31,7 @@ class _MyAppState extends State<MyApp> {
                 itemBuilder: (context,index){
                 return AudioBubble(filepath: audios[index]);
               },),
-            )),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(

@@ -1,15 +1,20 @@
 # audio_chat
 
-A new Flutter project.
+`audio_chat` is a Flutter package that provides robust functionality for voice chatting, similar to WhatsApp. With `audio_chat`, you can effortlessly integrate real-time voice communication into your Flutter applications, enabling seamless and interactive user experiences.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+- **Real-Time Voice Communication:** Enable high-quality, low-latency voice chat between users.
+- **Cross-Platform Support:** Works seamlessly on both iOS and Android devices.
+- **Customizable UI:** Adjust and style the user interface components to fit your app’s design.
+- **Push-to-Talk:** Option to implement a push-to-talk feature for controlled communication.
+- **Noise Suppression:** Built-in noise suppression to ensure clear audio.
+- **Automatic Gain Control:** Adjusts audio levels automatically for balanced sound.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Installation
 
+Add the `audio_chat` package to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  audio_chat: ^1.0.0

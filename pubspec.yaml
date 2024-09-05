@@ -1,7 +1,7 @@
 name: audio_chat
-description: "A new Flutter project."
+description: "audio_chat is a powerful and easy-to-use Flutter package designed to streamline the integration of real-time audio chat functionality into your Flutter applications. With audio_chat, you can effortlessly add voice communication features to your app, enhancing user interaction and engagement."
 version: 0.0.1
-homepage:
+homepage: https://github.com/devendra456/audio_chat
 
 environment:
   sdk: ^3.5.1

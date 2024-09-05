@@ -4,18 +4,26 @@ import 'dart:io';
 import 'package:audio_chat/src/widgets/flow_shader.dart';
 import 'package:audio_chat/src/widgets/lottie_animation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
+import '../Utils/vibration_helper.dart';
 
 class RecordButton extends StatefulWidget {
   const RecordButton({
     super.key,
     required this.onAudioRecorded,
+    this.showCancelSlider = true,
+    this.showLockSlider = true,
+    this.size = 55,
+    this.lockerHeight = 200,
   });
 
   final void Function(String? path) onAudioRecorded;
+  final bool showCancelSlider;
+  final bool showLockSlider;
+  final double size;
+  final double lockerHeight;
 
   @override
   State<RecordButton> createState() => _RecordButtonState();
@@ -23,10 +31,9 @@ class RecordButton extends StatefulWidget {
 
 class _RecordButtonState extends State<RecordButton>
     with SingleTickerProviderStateMixin {
-  static const double size = 55;
   late AnimationController controller;
+  late VibrationHelper vibrationHelper;
 
-  final double lockerHeight = 200;
   double timerWidth = 0;
 
   late Animation<double> buttonScaleAnimation;
@@ -48,6 +55,7 @@ class _RecordButtonState extends State<RecordButton>
   }
 
   void initController(){
+    vibrationHelper = VibrationHelper();
     record = AudioRecorder();
     controller = AnimationController(
       vsync: this,
@@ -85,7 +93,7 @@ class _RecordButtonState extends State<RecordButton>
       ),
     );
     lockerAnimation =
-        Tween<double>(begin: lockerHeight + 6, end: 0)
+        Tween<double>(begin:widget.lockerHeight + 6, end: 0)
             .animate(
       CurvedAnimation(
         parent: controller,
@@ -108,7 +116,9 @@ class _RecordButtonState extends State<RecordButton>
     return Stack(
       clipBehavior: Clip.none,
       children: [
+        if(widget.showLockSlider)
         lockSlider(),
+        if(widget.showCancelSlider)
         cancelSlider(),
         audioButton(),
         if (isLocked) timerLocked(),
@@ -122,19 +132,18 @@ class _RecordButtonState extends State<RecordButton>
       child: Opacity(
         opacity: (1/lockerAnimation.value).clamp(0, 1),
         child: Container(
-          height: lockerHeight,
-          width: size,
+          height:widget.lockerHeight,
+          width:widget.size,
           decoration: const ShapeDecoration(shape: StadiumBorder(),color: Colors.white),
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          child: Column(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const FaIcon(FontAwesomeIcons.lock, size: 20),
-              const SizedBox(height: 8),
+               FaIcon(FontAwesomeIcons.lock, size: 20),
+               SizedBox(height: 8),
               FlowShader(
-                flowColors: const [Colors.white, Colors.grey],
-                direction: Axis.vertical,
-                child: const Column(
+                flowColors:  [Colors.white, Colors.grey],
+                child:  Column(
                   children: [
                     Icon(Icons.keyboard_arrow_up),
                     Icon(Icons.keyboard_arrow_up),
@@ -155,7 +164,7 @@ class _RecordButtonState extends State<RecordButton>
       child: Opacity(
         opacity: (1/timerAnimation.value).clamp(0, 1),
         child: Container(
-          height: size,
+          height: widget.size,
           width: timerWidth,
           decoration: const ShapeDecoration(shape: StadiumBorder(),color: Colors.white),
           child: Padding(
@@ -165,18 +174,17 @@ class _RecordButtonState extends State<RecordButton>
               mainAxisSize: MainAxisSize.max,
               children: [
                 showLottie ? const LottieAnimation() : Text(recordDuration),
-                const SizedBox(width: size),
-                FlowShader(
-                  duration: const Duration(seconds: 3),
-                  flowColors: const [Colors.white, Colors.grey],
-                  child: const Row(
+                SizedBox(width: widget.size),
+                const FlowShader(
+                  flowColors:  [Colors.white, Colors.grey],
+                  child:  Row(
                     children: [
                       Icon(Icons.keyboard_arrow_left),
                       Text("Slide to cancel")
                     ],
                   ),
                 ),
-                const SizedBox(width: size),
+               SizedBox(width: widget.size),
               ],
             ),
           ),
@@ -189,7 +197,7 @@ class _RecordButtonState extends State<RecordButton>
     return Positioned(
       right: 0,
       child: Container(
-        height: size,
+        height: widget.size,
         width: timerWidth,
         decoration: const ShapeDecoration(shape: StadiumBorder(),color: Colors.white),
         child: Padding(
@@ -197,17 +205,13 @@ class _RecordButtonState extends State<RecordButton>
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () async {
-              Vibrate.feedback(FeedbackType.success);
+              vibrationHelper.vibrate();
               timer?.cancel();
               timer = null;
               startTime = null;
               recordDuration = "00:00";
 
               var filePath = await record.stop();
-              // AudioState.files.add(filePath!);
-              // Globals.audioListKey.currentState!
-              //     .insertItem(AudioState.files.length - 1);
-              debugPrint("====================>  $filePath");
               widget.onAudioRecorded(filePath);
               setState(() {
                 isLocked = false;
@@ -218,10 +222,9 @@ class _RecordButtonState extends State<RecordButton>
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(recordDuration),
-                FlowShader(
-                  duration: const Duration(seconds: 3),
-                  flowColors: const [Colors.white, Colors.grey],
-                  child: const Text("Tap lock to stop"),
+                const FlowShader(
+                  flowColors:  [Colors.white, Colors.grey],
+                  child:  Text("Tap lock to stop"),
                 ),
                 const Center(
                   child: FaIcon(
@@ -243,8 +246,8 @@ class _RecordButtonState extends State<RecordButton>
       child: Transform.scale(
         scale: buttonScaleAnimation.value,
         child: Container(
-          height: size,
-          width: size,
+          height: widget.size,
+          width: widget.size,
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -260,8 +263,8 @@ class _RecordButtonState extends State<RecordButton>
       onLongPressEnd: (details) async {
         debugPrint("onLongPressEnd");
 
-        if (isCancelled(details.localPosition, context)) {
-          Vibrate.feedback(FeedbackType.heavy);
+        if (isCancelled(details.localPosition, context) && widget.showCancelSlider) {
+          vibrationHelper.vibrate();
 
           timer?.cancel();
           timer = null;
@@ -281,10 +284,10 @@ class _RecordButtonState extends State<RecordButton>
             debugPrint("Deleted $filePath");
             showLottie = false;
           });
-        } else if (checkIsLocked(details.localPosition)) {
+        } else if (checkIsLocked(details.localPosition) && widget.showLockSlider) {
           controller.reverse();
 
-          Vibrate.feedback(FeedbackType.heavy);
+          vibrationHelper.vibrate();
           debugPrint("Locked recording");
           debugPrint(details.localPosition.dy.toString());
           setState(() {
@@ -293,7 +296,7 @@ class _RecordButtonState extends State<RecordButton>
         } else {
           controller.reverse();
 
-          Vibrate.feedback(FeedbackType.success);
+          vibrationHelper.vibrate();
 
           timer?.cancel();
           timer = null;
@@ -301,11 +304,7 @@ class _RecordButtonState extends State<RecordButton>
           recordDuration = "00:00";
 
           var filePath = await record.stop();
-          // AudioState.files.add(filePath!);
-          // Globals.audioListKey.currentState!
-          //     .insertItem(AudioState.files.length - 1);
           widget.onAudioRecorded(filePath);
-          debugPrint("====================>  $filePath");
         }
       },
       onLongPressCancel: () {
@@ -314,7 +313,7 @@ class _RecordButtonState extends State<RecordButton>
       },
       onLongPress: () async {
         debugPrint("onLongPress");
-        Vibrate.feedback(FeedbackType.success);
+        vibrationHelper.vibrate();
         if (await record.hasPermission()) {
           await record.start(
             const RecordConfig(

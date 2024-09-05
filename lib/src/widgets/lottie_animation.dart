@@ -28,7 +28,7 @@ class _LottieAnimationState extends State<LottieAnimation>
   Widget build(BuildContext context) {
     return Container(
       child: Lottie.asset(
-        'assets/dustbin_grey.json',
+        'assets/delete.json',
         controller: controller,
         onLoaded: (composition) {
           controller

@@ -1,7 +1,7 @@
 name: audio_chat
-description: "A new Flutter project."
-version: 0.0.1
-homepage:
+description: "audio_chat is a powerful and easy-to-use Flutter package designed to streamline the integration of real-time audio chat functionality into your Flutter applications. With audio_chat, you can effortlessly add voice communication features to your app, enhancing user interaction and engagement."
+version: 0.0.2
+homepage: https://github.com/devendra456/audio_chat
 
 environment:
   sdk: ^3.5.1
@@ -14,13 +14,14 @@ dependencies:
     sdk: flutter
   web: ^0.5.1
   plugin_platform_interface: ^2.0.2
-  flutter_vibrate: ^1.3.0
   font_awesome_flutter: ^10.7.0
   just_audio: ^0.9.40
   lottie: ^3.1.2
   path_provider: ^2.1.4
   permission_handler: ^11.3.1
   record: ^5.1.2
+  shimmer: ^3.0.0
+  vibration: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -32,10 +33,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
-  assets:
-    - assets/dustbin.json
-    - assets/dustbin_grey.json
   # This section identifies this Flutter project as a plugin project.
   # The 'pluginClass' specifies the class (in Java, Kotlin, Swift, Objective-C, etc.)
   # which should be registered in the plugin registry. This is required for
